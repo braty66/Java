@@ -1,65 +1,49 @@
-
-
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Montacargas {
 	
-	private Double pesoMaximoKg; 
-	private int cantidadDeDescargas;
-    
-	LinkedList <Carga> listaDeCargas = new LinkedList <Carga>(); 
-    
-	public Montacargas( Double pesoMaximoKg) {
-		this.pesoMaximoKg = pesoMaximoKg;
+	private Double pesoMaximo = 0.0;
+	private ArrayList <Carga> montaCarga = new ArrayList<>();
+	private Double pesoActual = 0.0;
+	private ArrayList <Double> descargas = new ArrayList<>();
+	public Montacargas(Double pesoMaximo) {
+		this.pesoMaximo = pesoMaximo;
 	}
-    
-	 public Double obtenerCarga() {
-		 Double  cargaActual = 0.0d; 
-		 int i;
-		 for ( i = 0 ; i < listaDeCargas.size();i++ ) {
-			cargaActual += listaDeCargas.get(i).getPesoKg();
-			 
+	public Double obtenerCarga() {
+		
+		for(int i = 0 ;i < montaCarga.size();i++) {
+			pesoActual += montaCarga.get(i).getPesoKg(); 
 		}
-		 return cargaActual;
-	 }
-	 public boolean cargar(Carga carga) {
-	
-	Double	 cargaRestante = pesoMaximoKg - obtenerCarga();
-		
-		 if (cargaRestante > carga.getPesoKg()&& carga.getPesoKg() > 0) {
+		return pesoActual;
+	}
+	public void cargar(Carga carga) {
+		  Double  pesoActualMasCargaActual = carga.getPesoKg() + pesoActual;
+		if (pesoActualMasCargaActual < pesoMaximo) {
+			montaCarga.add(carga);
 			
+		}
 		
-			listaDeCargas.add(carga);
-			return true;
-	 	}
-	 	else {
-	 	return false;
-	 	}
-	 	
-	 }
-	 public Double   descargar(){
-	 		
-	 		Double pesoDescargado = 0.0d;
-	 		
-	        if (obtenerCarga().doubleValue() > 0){
-	        ++cantidadDeDescargas;
-	        pesoDescargado = obtenerCarga().doubleValue();
+	}
+	public void descargar(){//baja del montacargas toda la carga que tiene.
+		
+		Double pesoDescarga = 0.0;
+		for (int i =0; i< montaCarga.size();i++) {//(Carga carga:montaCarga) {
+			pesoDescarga += montaCarga.get(i).getPesoKg();
+			
+			}
+		descargas.add(pesoDescarga);
+		montaCarga.clear();
+		
+	}
+	public Double obtenerCargaPromedio() { //Devuelve el peso kg promedio de las cargas completadas (cargadas y luego descargadas)
+	        Double pesoDescargas= 0.0;
+	        Double cargaPromedio = 0.0;
 	        
-	        listaDeCargas.clear();
-	     
-	 }
-	return pesoDescargado;
-	 }
-	 
-	 public double obtenerCargaPromedio(){
-	       Double cargaPromedio = 0.0;
-	    return cargaPromedio =  descargar()/cantidadDeDescargas;
-	    
-	    
+		for(int i =0 ;i<descargas.size();i++) {//(Double promedio: descargas) {
+		    pesoDescargas += descargas.get(i).doubleValue();
+		    }
+	    cargaPromedio = (pesoDescargas / (double)descargas.size()); 
+	    return cargaPromedio;
+	}
 	
-	 
-	 }
-	 
- 
- 
- }
+}
